@@ -339,6 +339,29 @@ if ((safeEventData.lockedRounds || []).includes(targetRound) && !isAdminEditing)
   }
 
   function stopTimer() {
+    function resetFieldDay() {
+  const confirmed = window.confirm(
+    "Are you sure you want to reset Field Day?\n\nThis will erase all scores and restart at Round 1."
+  );
+
+  if (!confirmed) return;
+
+  set(ref(db, EVENT_PATH), createInitialEvent());
+}
+
+function endFieldDay() {
+  const confirmed = window.confirm(
+    "Are you sure you want to end Field Day?\n\nScoring will be locked and the timer will stop."
+  );
+
+  if (!confirmed) return;
+
+  update(ref(db, EVENT_PATH), {
+    pauseEvent: true,
+    timerEndsAt: null,
+    lockedRounds: [],
+  });
+}
     update(ref(db), {
       [`${EVENT_PATH}/timerEndsAt`]: null,
       [`${EVENT_PATH}/history`]: addHistory("Stopped round timer"),
@@ -576,7 +599,36 @@ if ((safeEventData.lockedRounds || []).includes(targetRound) && !isAdminEditing)
             <div style={{ display: "grid", gap: 12 }}>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <button type="button" onClick={() => advanceRound(false)} disabled={missingStations().length > 0 || currentRound >= ROUND_COUNT} style={{ padding: "10px 14px", borderRadius: 10, background: "#2563eb" }}>▶️ Advance Round</button>
-                <button type="button" onClick={() => advanceRound(true)} disabled={currentRound >= ROUND_COUNT} style={{ padding: "10px 14px", borderRadius: 10, background: "#dc2626" }}>⏭️ Force Advance</button>
+                <button type="button" onClick={() => advanceRound(true)} disabled={currentRound >= ROUND_COUNT} style={{ padding: "10px 14px", borderRadius: 10, background: "#dc2626" }}>⏭️ Force Advance</button> 
+                <button
+  type="button"
+  onClick={resetFieldDay}
+  style={{
+    padding: "10px 14px",
+    borderRadius: 10,
+    background: "#7f1d1d",
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  }}
+>
+  🔄 Reset Field Day
+</button>
+
+<button
+  type="button"
+  onClick={endFieldDay}
+  style={{
+    padding: "10px 14px",
+    borderRadius: 10,
+    background: "#111827",
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  }}
+>
+  🏁 End Field Day
+</button>
                 <button type="button" onClick={togglePause} style={{ padding: "10px 14px", borderRadius: 10, background: "#ea580c" }}>{safeEventData.pauseEvent ? "▶️ Resume Event" : "⏸️ Pause Event"}</button>
                 <button type="button" onClick={editLastSubmission} disabled={!safeEventData.lastSubmission} style={{ padding: "10px 14px", borderRadius: 10 }}>Edit Last Submission</button>
               </div>
