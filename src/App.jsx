@@ -339,7 +339,13 @@ if ((safeEventData.lockedRounds || []).includes(targetRound) && !isAdminEditing)
   }
 
   function stopTimer() {
-    function resetFieldDay() {
+  update(ref(db), {
+    [`${EVENT_PATH}/timerEndsAt`]: null,
+    [`${EVENT_PATH}/history`]: addHistory("Stopped round timer"),
+  });
+}
+
+function resetFieldDay() {
   const confirmed = window.confirm(
     "Are you sure you want to reset Field Day?\n\nThis will erase all scores and restart at Round 1."
   );
@@ -359,15 +365,10 @@ function endFieldDay() {
   update(ref(db, EVENT_PATH), {
     pauseEvent: true,
     timerEndsAt: null,
-    lockedRounds: [],
+    lockedRounds: Array.from({ length: ROUND_COUNT }, (_, i) => i + 1),
+    history: addHistory("Field Day ended by admin"),
   });
 }
-    update(ref(db), {
-      [`${EVENT_PATH}/timerEndsAt`]: null,
-      [`${EVENT_PATH}/history`]: addHistory("Stopped round timer"),
-    });
-  }
-
   function editLastSubmission() {
     if (!safeEventData.lastSubmission) return;
     const { stationId: sId, round } = safeEventData.lastSubmission;
