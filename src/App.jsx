@@ -35,7 +35,16 @@ const STATION_COUNT = 24;
 const ROUND_COUNT = 12;
 const ADMIN_PASSCODE = "2468";
 const places = ["1st", "2nd", "3rd", "4th"];
+function getStationFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const station = Number(params.get("station"));
 
+  if (Number.isInteger(station) && station >= 1 && station <= STATION_COUNT) {
+    return station;
+  }
+
+  return null;
+}
 function fmtTime(ts) {
   if (!ts) return "—";
   try {
@@ -150,7 +159,9 @@ export default function FieldDayApp() {
   const [eventData, setEventData] = useState(null);
   const [adminPasscode, setAdminPasscode] = useState("");
   const [view, setView] = useState("station");
-  const [stationId, setStationId] = useState(1);
+  const stationFromUrl = getStationFromUrl();
+const [stationId, setStationId] = useState(stationFromUrl || 1);
+const stationLockedByLink = stationFromUrl !== null;
   const [selectedAdminStation, setSelectedAdminStation] = useState(1);
   const [backfillRound, setBackfillRound] = useState(1);
   const [backfillStation, setBackfillStation] = useState(1);
@@ -469,9 +480,19 @@ function endFieldDay() {
           <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 18, flexWrap: "wrap" }}>
             <label>
               <strong>Station:</strong>{" "}
-              <select value={stationId} onChange={(e) => setStationId(Number(e.target.value))} style={{ padding: 8, borderRadius: 8 }}>
+             <select
+  value={stationId}
+  disabled={stationLockedByLink}
+  onChange={(e) => setStationId(Number(e.target.value))}
+  style={{ padding: 8, borderRadius: 8 }}
+>
                 {Array.from({ length: STATION_COUNT }, (_, i) => <option key={i + 1} value={i + 1}>Station {i + 1}</option>)}
               </select>
+              {stationLockedByLink ? (
+  <span style={{ marginLeft: 10, color: "#64748b", fontWeight: 700 }}>
+    Locked by station link
+  </span>
+) : null}
             </label>
             <div><strong>Status:</strong> {roundLocked ? "Locked" : stationSubmitted ? "Submitted" : "Open"}</div>
             <div><strong>Autosave:</strong> Live</div>
