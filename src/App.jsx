@@ -35,6 +35,33 @@ const STATION_COUNT = 24;
 const ROUND_COUNT = 12;
 const ADMIN_PASSCODE = "2468";
 const places = ["1st", "2nd", "3rd", "4th"];
+const STATION_NAMES = [
+  "Station 1 (K-2)",
+  "Station 2 (K-2)",
+  "Station 3 (K-2)",
+  "Station 4 (K-2)",
+  "Station 5 (K-2)",
+  "Station 6 (K-2)",
+  "Station 7 (K-2)",
+  "Station 8 (K-2)",
+  "Station 9 (K-2)",
+  "Station 10 (K-2)",
+  "Station 11 (K-2)",
+  "Station 12 (K-2)",
+
+  "Station 1 (3-5)",
+  "Station 2 (3-5)",
+  "Station 3 (3-5)",
+  "Station 4 (3-5)",
+  "Station 5 (3-5)",
+  "Station 6 (3-5)",
+  "Station 7 (3-5)",
+  "Station 8 (3-5)",
+  "Station 9 (3-5)",
+  "Station 10 (3-5)",
+  "Station 11 (3-5)",
+  "Station 12 (3-5)"
+];
 function getStationFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const station = Number(params.get("station"));
@@ -544,7 +571,9 @@ function endFieldDay() {
           </div>
 
           <div style={{ border: "1px solid #ddd", borderRadius: 14, padding: 20 }}>
-            <h2 style={{ marginTop: 0 }}>Station {stationId} Entry</h2>
+      <h2 style={{ marginTop: 0 }}>
+  {STATION_NAMES[stationId - 1]} Entry
+</h2>
             <p>Choose one team for each place. Once a team is assigned, it disappears from the other place options.</p>
             <div style={{ display: "grid", gap: 16 }}>
               {places.map((place) => {
@@ -801,7 +830,9 @@ function endFieldDay() {
               <h2 style={{ marginTop: 0, marginBottom: 14, color: "#f8fafc" }}>Backfill Editor</h2>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
                 <label>Round <select value={backfillRound} onChange={(e) => setBackfillRound(Number(e.target.value))} style={{ marginLeft: 6, padding: 8, borderRadius: 8 }}>{Array.from({ length: ROUND_COUNT }, (_, i) => <option key={i + 1} value={i + 1}>Round {i + 1}</option>)}</select></label>
-                <label>Station <select value={backfillStation} onChange={(e) => setBackfillStation(Number(e.target.value))} style={{ marginLeft: 6, padding: 8, borderRadius: 8 }}>{Array.from({ length: STATION_COUNT }, (_, i) => <option key={i + 1} value={i + 1}>Station {i + 1}</option>)}</select></label>
+                <label>Station <select value={backfillStation} onChange={(e) => setBackfillStation(Number(e.target.value))} style={{ marginLeft: 6, padding: 8, borderRadius: 8 }}>{Array.from({ length: STATION_COUNT }, (_, i) => <option key={i + 1} value={i + 1}>
+  {STATION_NAMES[i]}
+</option>)}</select></label>
               </div>
               <div style={{ display: "grid", gap: 10 }}>
                 {places.map((place) => {
