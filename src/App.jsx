@@ -558,7 +558,9 @@ function endFieldDay() {
   onChange={(e) => setStationId(Number(e.target.value))}
   style={{ padding: 8, borderRadius: 8 }}
 >
-                {Array.from({ length: STATION_COUNT }, (_, i) => <option key={i + 1} value={i + 1}>Station {i + 1}</option>)}
+                {Array.from({ length: STATION_COUNT }, (_, i) => <option key={i + 1} value={i + 1}>
+  {STATION_NAMES[i]}
+</option>)}
               </select>
               {stationLockedByLink ? (
   <span style={{ marginLeft: 10, color: "#64748b", fontWeight: 700 }}>
