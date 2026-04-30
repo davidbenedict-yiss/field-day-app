@@ -297,6 +297,26 @@ if ((safeEventData.lockedRounds || []).includes(targetRound) && !isAdminEditing)
       [`${EVENT_PATH}/stations/${targetStationId}/lastTouchedAt`]: Date.now(),
     });
   }
+  function clearPlace(place, targetStationId = stationId, targetRound = currentRound) {
+  const isAdminEditing = view === "admin";
+
+  if (safeEventData.pauseEvent && !isAdminEditing) return;
+  if ((safeEventData.lockedRounds || []).includes(targetRound) && !isAdminEditing) return;
+
+  const currentRoundData =
+    safeEventData.stations[targetStationId].rounds[targetRound];
+
+  const nextRoundData = { ...currentRoundData };
+
+  nextRoundData[place] = "";
+  nextRoundData.submitted = false;
+
+  update(ref(db), {
+    [`${EVENT_PATH}/stations/${targetStationId}/rounds/${targetRound}`]:
+      nextRoundData,
+    [`${EVENT_PATH}/stations/${targetStationId}/lastTouchedAt`]: Date.now(),
+  });
+}
 
   function submitScores() {
     if (!stationComplete || roundLocked || safeEventData.pauseEvent) return;
@@ -537,6 +557,25 @@ function endFieldDay() {
                     <div style={{ marginTop: 8, color: "#475569" }}>
                       Selected: {currentValues[place] ? <TeamLabel teamId={currentValues[place]} /> : "None"}
                     </div>
+                    {currentValues[place] ? (
+  <button
+    type="button"
+    onClick={() => clearPlace(place)}
+    disabled={roundLocked || safeEventData.pauseEvent}
+    style={{
+      marginTop: 8,
+      padding: "8px 10px",
+      borderRadius: 8,
+      background: "#64748b",
+      color: "white",
+      fontWeight: 700,
+      cursor: "pointer",
+      width: "100%",
+    }}
+  >
+    Clear {place}
+  </button>
+) : null}
                   </div>
                 );
               })}
