@@ -469,6 +469,31 @@ function endFieldDay() {
           opacity: 0.7;
           cursor: not-allowed;
         }
+        @media (max-width: 600px) {
+  body {
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  button {
+    width: 100%;
+    min-width: 0 !important;
+    white-space: normal;
+  }
+
+  select,
+  input {
+    max-width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  div {
+    box-sizing: border-box;
+  }
+}
       `}</style>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
