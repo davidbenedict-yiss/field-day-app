@@ -346,7 +346,7 @@ if ((safeEventData.lockedRounds || []).includes(targetRound) && !isAdminEditing)
 }
 
   function submitScores() {
-    if (!stationComplete || roundLocked || safeEventData.pauseEvent) return;
+    if (!stationComplete || roundLocked || safeEventData.pauseEvent || stationSubmitted) return;
     update(ref(db), {
       [`${EVENT_PATH}/stations/${stationId}/rounds/${currentRound}/submitted`]: true,
       [`${EVENT_PATH}/stations/${stationId}/lastSubmittedAt`]: Date.now(),
@@ -589,7 +589,7 @@ function endFieldDay() {
                           <button
                             type="button"
                             key={team.id}
-                            disabled={roundLocked || safeEventData.pauseEvent}
+                            disabled={roundLocked || safeEventData.pauseEvent || stationSubmitted}
                             onClick={() => assignTeamToPlace(place, team.id)}
                             style={{
                               padding: "12px 14px",
@@ -616,7 +616,7 @@ function endFieldDay() {
   <button
     type="button"
     onClick={() => clearPlace(place)}
-    disabled={roundLocked || safeEventData.pauseEvent}
+    disabled={roundLocked || safeEventData.pauseEvent || stationSubmitted}
     style={{
       marginTop: 8,
       padding: "8px 10px",
@@ -638,7 +638,7 @@ function endFieldDay() {
             <div style={{ marginTop: 18, display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
               <button
                 onClick={submitScores}
-                disabled={!stationComplete || roundLocked || safeEventData.pauseEvent}
+                disabled={!stationComplete || roundLocked || safeEventData.pauseEvent || stationSubmitted}
                 style={{
                   padding: "14px 20px",
                   borderRadius: 12,
@@ -654,7 +654,7 @@ function endFieldDay() {
                 {submitFlash ? "✅ Submitted" : "📝 Submit Scores"}
               </button>
               <div>
-                {roundLocked ? "This round has been locked by the admin." : stationSubmitted ? `Scores submitted at ${fmtTime(safeEventData.stations[stationId].lastSubmittedAt)}.` : stationComplete ? "All places selected. Press Submit Scores." : "Choose one team for each place."}
+                {roundLocked ? "This round has been locked by the admin." : stationSubmitted ? `Scores submitted at ${fmtTime(safeEventData.stations[stationId].lastSubmittedAt)}. This station is now locked for this round.` : stationComplete ? "All places selected. Press Submit Scores." : "Choose one team for each place."}
               </div>
             </div>
           </div>
