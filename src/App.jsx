@@ -544,8 +544,7 @@ function endFieldDay() {
         <SummaryCard title="Current Round Timer" value={timerText} subvalue={safeEventData.timerEndsAt ? `Ends ${fmtTime(safeEventData.timerEndsAt)}` : "Start from Admin Board"} flash={timerRemainingMs === 0 && !!eventData.timerEndsAt} color={timerRemainingMs === 0 && !!eventData.timerEndsAt ? "#fee2e2" : "#f8fafc"} />
         <SummaryCard title="Stations Submitted" value={`${statusData.filter((s) => s.status === "submitted").length}/${STATION_COUNT}`} subvalue="current round" />
         <SummaryCard title="Stations Missing" value={missingStations().length} subvalue={missingStations().length ? missingStations().map((n) => `S${n}`).join(", ") : "none"} />
-        <SummaryCard title="Projected Winner" value={projectedWinner ? <TeamLabel teamId={projectedWinner.id} /> : "—"} subvalue={`Lead: ${projectedLead} • Max remaining/team: ${maxRemainingPerTeam}`} />
-      </div>
+              </div>
 
       {view === "station" ? (
         <div>
